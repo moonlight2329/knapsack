@@ -28,7 +28,7 @@ class GeneticAlgorithm:
     def crossover(self, p1, p2):
         if np.random.rand() < self.crossover_rate:
             point = np.random.randint(1, self.chromosome_length)
-            return np.concatenate((p1[:point], p2[point:]))
+            return np.concatenate([p1[:point], p2[point:]])
         return p1.copy()
 
     def mutate(self, individual):
