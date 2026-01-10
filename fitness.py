@@ -1,32 +1,27 @@
-import pandas as pd
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.linear_model import LogisticRegression
+
+def load_knapsack_data(filepath):
+    values = []
+    weights = []
+
+    with open(filepath, "r") as f:
+        for line in f:
+            v, w = line.strip().split()
+            values.append(float(v))
+            weights.append(float(w))
+
+    return np.array(values), np.array(weights)
 
 # Load dataset
-data = pd.read_csv("processed_mknapcb3/mknapcb3")
+values, weights = load_knapsack_data("data/mknapcb3.txt")
 
-X = data.iloc[:, :-1]
-y = data.iloc[:, -1]
+CAPACITY = 15  # Change based on dataset
 
-def feature_selection_fitness(chromosome):
-    selected_features = chromosome == 1
+def knapsack_fitness(chromosome):
+    total_value = np.sum(values * chromosome)
+    total_weight = np.sum(weights * chromosome)
 
-    if np.sum(selected_features) == 0:
-        return 1e6  # Penalize empty feature set
+    if total_weight > CAPACITY:
+        return 1e6  # Penalize infeasible solutions
 
-    model = LogisticRegression(max_iter=1000)
-
-    scores = cross_val_score(
-        model,
-        X.loc[:, selected_features],
-        y,
-        cv=5,
-        scoring="accuracy"
-    )
-
-    accuracy = scores.mean()
-
-    # Multi-objective: accuracy + feature reduction
-    penalty = 0.01 * np.sum(selected_features)
-    return -(accuracy - penalty)  # GA minimizes
+    return -total_value  # Maximize value
