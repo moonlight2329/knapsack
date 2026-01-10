@@ -38,3 +38,7 @@ if st.button("Run Genetic Algorithm"):
     ax.set_ylabel("Best Fitness")
     ax.set_title("GA Convergence Curve")
     st.pyplot(fig)
+
+import os
+st.write("Files in data folder:", os.listdir("data"))
+
