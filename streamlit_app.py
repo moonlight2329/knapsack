@@ -1,21 +1,14 @@
-import os
-import streamlit as st
-
-st.write("Current working directory:", os.getcwd())
-st.write("Root files:", os.listdir())
-st.write("Data folder contents:", os.listdir("data") if os.path.exists("data") else "NO DATA FOLDER")
-
 import streamlit as st
 import matplotlib.pyplot as plt
 
 from ga import GeneticAlgorithm
 from fitness import knapsack_fitness, values, weights
 
-st.title("Genetic Algorithm – Knapsack Optimization")
+st.title("Genetic Algorithm – Knapsack Problem")
 
 st.sidebar.header("GA Parameters")
 pop_size = st.sidebar.slider("Population Size", 20, 200, 50)
-generations = st.sidebar.slider("Generations", 50, 500, 100)
+generations = st.sidebar.slider("Generations", 50, 300, 100)
 mutation_rate = st.sidebar.slider("Mutation Rate", 0.01, 0.3, 0.05)
 crossover_rate = st.sidebar.slider("Crossover Rate", 0.5, 1.0, 0.8)
 
@@ -35,7 +28,7 @@ if st.button("Run Genetic Algorithm"):
     total_weight = (best_solution * weights).sum()
 
     st.success("Optimization Completed")
-    st.write("Selected Items:", best_solution)
+    st.write("Selected Items (1 = chosen):", best_solution)
     st.write("Total Value:", total_value)
     st.write("Total Weight:", total_weight)
 
@@ -45,7 +38,3 @@ if st.button("Run Genetic Algorithm"):
     ax.set_ylabel("Best Fitness")
     ax.set_title("GA Convergence Curve")
     st.pyplot(fig)
-
-from fitness import knapsack_fitness, values, weights, loaded_file
-
-st.write("Loaded dataset file:", loaded_file)
