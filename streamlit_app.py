@@ -1,3 +1,10 @@
+import os
+import streamlit as st
+
+st.write("Current working directory:", os.getcwd())
+st.write("Root files:", os.listdir())
+st.write("Data folder contents:", os.listdir("data") if os.path.exists("data") else "NO DATA FOLDER")
+
 import streamlit as st
 import matplotlib.pyplot as plt
 
@@ -38,7 +45,3 @@ if st.button("Run Genetic Algorithm"):
     ax.set_ylabel("Best Fitness")
     ax.set_title("GA Convergence Curve")
     st.pyplot(fig)
-
-import os
-st.write("Files in data folder:", os.listdir("data"))
-
