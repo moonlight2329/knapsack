@@ -4,7 +4,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LogisticRegression
 
 # Load dataset
-data = pd.read_csv("data/dataset.csv")
+data = pd.read_csv("processed_mknapcb3/mknapcb3")
 
 X = data.iloc[:, :-1]
 y = data.iloc[:, -1]
