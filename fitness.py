@@ -1,39 +1,28 @@
 import numpy as np
 import os
 
-def load_knapsack_from_directory(dir_path):
-    files = [f for f in os.listdir(dir_path) if f.endswith(".txt")]
-
-    if not files:
-        raise FileNotFoundError("No .txt files found in knapsack directory")
-
-    file_path = os.path.join(dir_path, files[0])  # load first instance
-
-    values = []
-    weights = []
-
-    with open(file_path, "r") as f:
-        for line in f:
-            parts = line.strip().split()
-            if len(parts) >= 2:
-                values.append(float(parts[0]))
-                weights.append(float(parts[1]))
-
-    return np.array(values), np.array(weights), file_path
-
-
+# Locate dataset safely
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "data", "mknapcb3")
+DATA_FILE = os.path.join(BASE_DIR, "data", "knapsack.txt")
 
-values, weights, loaded_file = load_knapsack_from_directory(DATA_DIR)
+def load_knapsack(filepath):
+    values, weights = [], []
+    with open(filepath, "r") as f:
+        for line in f:
+            v, w = line.strip().split()
+            values.append(float(v))
+            weights.append(float(w))
+    return np.array(values), np.array(weights)
 
-CAPACITY = 15  # adjust if needed
+values, weights = load_knapsack(DATA_FILE)
+
+CAPACITY = 15  # Change if needed
 
 def knapsack_fitness(chromosome):
     total_value = np.sum(values * chromosome)
     total_weight = np.sum(weights * chromosome)
 
     if total_weight > CAPACITY:
-        return 1e6
+        return 1e6  # penalty
 
     return -total_value
