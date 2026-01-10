@@ -2,11 +2,9 @@ import streamlit as st
 import matplotlib.pyplot as plt
 
 from ga import GeneticAlgorithm
-from fitness import knapsack_fitness, values, weights, LOADED_FILE
+from fitness import knapsack_fitness, values, weights
 
-st.title("Genetic Algorithm – Knapsack (MKnapCB3)")
-
-st.write("Loaded dataset file:", LOADED_FILE)
+st.title("Genetic Algorithm – Knapsack Problem")
 
 st.sidebar.header("GA Parameters")
 pop_size = st.sidebar.slider("Population Size", 20, 200, 50)
