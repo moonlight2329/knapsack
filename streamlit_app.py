@@ -45,3 +45,7 @@ if st.button("Run Genetic Algorithm"):
     ax.set_ylabel("Best Fitness")
     ax.set_title("GA Convergence Curve")
     st.pyplot(fig)
+
+from fitness import knapsack_fitness, values, weights, loaded_file
+
+st.write("Loaded dataset file:", loaded_file)
