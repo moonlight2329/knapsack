@@ -14,17 +14,36 @@ def get_available_instances():
             instances.append(instance_id)
     return sorted(instances)
 
+def extract_capacity(config):
+    # Common capacity key names
+    for key in ["capacity", "Capacity", "knapsack_capacity", "C"]:
+        if key in config:
+            return config[key]
+
+    # Sometimes nested
+    for value in config.values():
+        if isinstance(value, dict):
+            for key in ["capacity", "Capacity", "knapsack_capacity", "C"]:
+                if key in value:
+                    return value[key]
+
+    raise KeyError(
+        f"Capacity not found in config file. Available keys: {list(config.keys())}"
+    )
+
 def load_instance(instance_id):
     csv_file = os.path.join(DATA_DIR, f"mknapcb3_{instance_id}.csv")
     json_file = os.path.join(DATA_DIR, f"mknapcb3_{instance_id}_config.json")
 
+    # Load CSV
     df = pd.read_csv(csv_file)
     values = df.iloc[:, 0].astype(float).values
     weights = df.iloc[:, 1].astype(float).values
 
+    # Load JSON
     with open(json_file, "r") as f:
         config = json.load(f)
 
-    capacity = config.get("capacity") or config.get("Capacity")
+    capacity = extract_capacity(config)
 
     return values, weights, float(capacity)
