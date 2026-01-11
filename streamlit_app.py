@@ -2,14 +2,16 @@ import streamlit as st
 import matplotlib.pyplot as plt
 
 from ga import GeneticAlgorithm
-from fitness import load_instance
+from fitness import load_instance, get_available_instances
 
 st.title("Genetic Algorithm – MKnapCB3 Knapsack Optimization")
 
-# ---- Instance selection ----
+# ---- Auto-detect instances ----
+instances = get_available_instances()
+
 instance_id = st.selectbox(
     "Select Knapsack Instance",
-    ["inst00", "inst06", "inst09", "inst12", "inst15"]
+    instances
 )
 
 values, weights, CAPACITY = load_instance(instance_id)
@@ -49,8 +51,6 @@ if st.button("Run Genetic Algorithm"):
     st.success("Optimization Completed")
     st.write("Total Value:", -best_fitness)
     st.write("Total Weight:", (best_solution * weights).sum())
-    st.write("Selected Items (1 = selected):")
-    st.write(best_solution)
 
     fig, ax = plt.subplots()
     ax.plot(history)
