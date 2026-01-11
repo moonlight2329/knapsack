@@ -14,22 +14,29 @@ def get_available_instances():
             instances.append(instance_id)
     return sorted(instances)
 
+def find_numeric_values(obj, nums):
+    if isinstance(obj, (int, float)):
+        nums.append(obj)
+    elif isinstance(obj, list):
+        for v in obj:
+            find_numeric_values(v, nums)
+    elif isinstance(obj, dict):
+        for v in obj.values():
+            find_numeric_values(v, nums)
+
 def extract_capacity(config):
-    # Common capacity key names
-    for key in ["capacity", "Capacity", "knapsack_capacity", "C"]:
-        if key in config:
-            return config[key]
+    nums = []
+    find_numeric_values(config, nums)
 
-    # Sometimes nested
-    for value in config.values():
-        if isinstance(value, dict):
-            for key in ["capacity", "Capacity", "knapsack_capacity", "C"]:
-                if key in value:
-                    return value[key]
+    if not nums:
+        raise ValueError("No numeric values found in config file")
 
-    raise KeyError(
-        f"Capacity not found in config file. Available keys: {list(config.keys())}"
-    )
+    # Heuristic:
+    # - capacity is usually the largest number except the optimal value
+    # - item count is usually smaller
+    capacity = max(nums)
+
+    return capacity
 
 def load_instance(instance_id):
     csv_file = os.path.join(DATA_DIR, f"mknapcb3_{instance_id}.csv")
