@@ -1,28 +1,24 @@
-import numpy as np
 import os
+import json
+import numpy as np
+import pandas as pd
 
-# Locate dataset safely
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(BASE_DIR, "data", "knapsack.txt")
+DATA_DIR = os.path.join(BASE_DIR, "processed_mknapcb3", "mknapcb3")
 
-def load_knapsack(filepath):
-    values, weights = [], []
-    with open(filepath, "r") as f:
-        for line in f:
-            v, w = line.strip().split()
-            values.append(float(v))
-            weights.append(float(w))
-    return np.array(values), np.array(weights)
+def load_instance(instance_id):
+    csv_file = os.path.join(DATA_DIR, f"mknapcb3_{instance_id}.csv")
+    json_file = os.path.join(DATA_DIR, f"mknapcb3_{instance_id}_config.json")
 
-values, weights = load_knapsack(DATA_FILE)
+    # Load CSV (items)
+    df = pd.read_csv(csv_file)
+    values = df.iloc[:, 0].astype(float).values
+    weights = df.iloc[:, 1].astype(float).values
 
-CAPACITY = 15  # Change if needed
+    # Load JSON (capacity)
+    with open(json_file, "r") as f:
+        config = json.load(f)
 
-def knapsack_fitness(chromosome):
-    total_value = np.sum(values * chromosome)
-    total_weight = np.sum(weights * chromosome)
+    capacity = config.get("capacity") or config.get("Capacity")
 
-    if total_weight > CAPACITY:
-        return 1e6  # penalty
-
-    return -total_value
+    return values, weights, float(capacity)
